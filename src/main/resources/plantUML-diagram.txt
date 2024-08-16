@@ -1,0 +1,37 @@
+@startuml
+class PaymentController {
+    +PaymentController(paymentFactory: PaymentFactory)
+    +makePayment(paymentDto: PaymentDto): ResponseEntity<String>
+}
+
+interface PaymentFactory {
+    +createPayment(type: String): PaymentService
+}
+
+class PaymentFactoryImpl {
+    +createPayment(type: String): PaymentService
+}
+
+interface PaymentService {
+    +processPayment(amount: Double): void
+}
+
+class CreditCardPaymentService implements PaymentService {
+    +processPayment(amount: Double): void
+}
+
+class GooglePayPaymentService implements PaymentService {
+    +processPayment(amount: Double): void
+}
+
+class PayPalPaymentService implements PaymentService {
+    +processPayment(amount: Double): void
+}
+
+PaymentController --> PaymentFactoryImpl : uses
+PaymentFactoryImpl ..|> PaymentFactory : implements
+PaymentFactoryImpl --> PaymentService : creates
+PaymentService <|.. CreditCardPaymentService : implements
+PaymentService <|.. GooglePayPaymentService : implements
+PaymentService <|.. PayPalPaymentService : implements
+@enduml
